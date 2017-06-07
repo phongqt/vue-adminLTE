@@ -1,6 +1,14 @@
 import axios from 'axios'
+import Token from '@/providers/token'
 
 var defaultUrl = 'http://localhost:4500/api/'
+
+export const http = axios.create({
+  baseURL: 'http://localhost:4500/api/',
+  headers: {
+    Authorization: Token.getToken()
+  }
+})
 
 var result = {
   success: Boolean,
@@ -10,7 +18,7 @@ var result = {
 }
 
 var get = function (api) {
-  return axios.get(defaultUrl + api).then(response => {
+  return http.get(defaultUrl + api).then(response => {
     result = response.data
     return result
   }).catch(error => {
@@ -23,7 +31,17 @@ var get = function (api) {
 }
 
 var post = function (api, data) {
-  return axios.post(defaultUrl + api, JSON.stringify(data))
+  return http.post(defaultUrl + api, data).then(response => {
+    result = response.data
+    result.code = response.status
+    return result
+  }).catch(error => {
+    result.code = 500
+    result.data = null
+    result.message = error
+    result.success = false
+    return result
+  })
 }
 
 export default {
