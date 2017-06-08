@@ -1,8 +1,6 @@
 import axios from 'axios'
 import Token from '@/providers/token'
 
-var defaultUrl = 'http://localhost:4500/api/'
-
 export const http = axios.create({
   baseURL: 'http://localhost:4500/api/',
   headers: {
@@ -11,40 +9,65 @@ export const http = axios.create({
 })
 
 var result = {
-  success: Boolean,
-  data: Object,
-  message: String,
-  code: Number
+  success: false,
+  data: null,
+  message: '',
+  code: 500
 }
 
-var get = function (api) {
-  return http.get(defaultUrl + api).then(response => {
-    result = response.data
-    return result
+var _get = function (api) {
+  return http.get(api).then(response => {
+    return handleSuccess(response)
   }).catch(error => {
-    result.code = 500
-    result.data = null
-    result.message = error
-    result.success = false
-    return result
+    return handleError(error)
   })
 }
 
-var post = function (api, data) {
-  return http.post(defaultUrl + api, data).then(response => {
-    result = response.data
-    result.code = response.status
-    return result
+var _post = function (api, data) {
+  return http.post(api, data).then(response => {
+    return handleSuccess(response)
   }).catch(error => {
-    result.code = 500
-    result.data = null
-    result.message = error
-    result.success = false
-    return result
+    return handleError(error)
   })
+}
+
+var _put = function (api, data) {
+  return http.put(api, data).then(response => {
+    return handleSuccess(response)
+  }).catch(error => {
+    return handleError(error)
+  })
+}
+
+var _delete = function (api, data) {
+  return http.delete(api).then(response => {
+    return handleSuccess(response)
+  }).catch(error => {
+    return handleError(error)
+  })
+}
+
+function handleSuccess (response) {
+  result.code = response.status
+  result.success = response.data.success
+  if (result.success) {
+    result.data = response.data.data.data
+  }
+  result.message = response.data.message
+  return result
+}
+
+function handleError (error) {
+  result.code = 500
+  result.data = null
+  result.message = error
+  result.success = false
+  return result
 }
 
 export default {
-  get,
-  post
+  get: _get,
+  post: _post,
+  put: _put,
+  delete: _delete
 }

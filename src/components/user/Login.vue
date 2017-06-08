@@ -12,7 +12,7 @@
           <div class="alert alert-danger" v-if="errors.has('username')">{{errors.first('username')}}</div>
         </div>
         <div class="form-group has-feedback">
-          <input type="password" class="form-control" v-model="user.password" v-validate="'required|min:5'" name="password" placeholder="Password">
+          <input type="password" class="form-control" v-model="user.password" v-validate="'required|min:6'" name="password" placeholder="Password">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           <div class="alert alert-danger" v-if="errors.has('password')">{{errors.first('password')}}</div>
         </div>
@@ -43,7 +43,6 @@
     },
     computed: {
       formDirty () {
-        console.log(Object.keys(this.fields))
         return Object.keys(this.fields).some(key => this.fields[key].dirty)
       }
     },

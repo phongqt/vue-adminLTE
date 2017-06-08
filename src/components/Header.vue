@@ -54,7 +54,7 @@
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a @click="logOut" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>
@@ -66,7 +66,14 @@
   </header>    
 </template>
 <script>
+  import Token from '@/providers/token'
   export default {
-    name: 'header-component'
+    name: 'header-component',
+    methods: {
+      logOut () {
+        Token.removeToken()
+        this.$router.push({name: 'Login'})
+      }
+    }
   }
 </script>

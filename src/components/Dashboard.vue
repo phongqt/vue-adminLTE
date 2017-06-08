@@ -1,71 +1,55 @@
 <template>
-      <!-- Info boxes -->
     <div class="row">
-      <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box">
-          <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
-
-          <div class="info-box-content">
-            <span class="info-box-text">CPU Traffic</span>
-            <span class="info-box-number">90<small>%</small></span>
-          </div>
-          <!-- /.info-box-content -->
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                <router-link v-bind:to="'/user-add'" class="btn btn-primary">Add new</router-link></h3>
+            </div>
+            <div class="box-body">
+                <grid-component v-bind:columns="gridColumns" v-bind:list="list" v-bind:sortKey="sortByKey" v-on:sort-by="sort"></grid-component>
+                <div class="text-center">                    
+                </div>
+            </div>
         </div>
-        <!-- /.info-box -->
-      </div>
-      <!-- /.col -->
-      <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box">
-          <span class="info-box-icon bg-red"><i class="fa fa-google-plus"></i></span>
-
-          <div class="info-box-content">
-            <span class="info-box-text">Likes</span>
-            <span class="info-box-number">41,410</span>
-          </div>
-          <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-      </div>
-      <!-- /.col -->
-
-      <!-- fix for small devices only -->
-      <div class="clearfix visible-sm-block"></div>
-
-      <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box">
-          <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
-
-          <div class="info-box-content">
-            <span class="info-box-text">Sales</span>
-            <span class="info-box-number">760</span>
-          </div>
-          <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-      </div>
-      <!-- /.col -->
-      <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box">
-          <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
-
-          <div class="info-box-content">
-            <span class="info-box-text">New Members</span>
-            <span class="info-box-number">2,000</span>
-          </div>
-          <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-      </div>
-      <!-- /.col -->
     </div>
-    <!-- /.row -->
+  </div>
 </template>
 <script>
   import UserService from '@/services/user'
+  import GridComponent from '@/components/Grid'
   export default {
+    components: {
+      GridComponent
+    },
+    data: function () {
+      return {
+        gridColumns:
+        [
+          {name: 'UserName', text: 'User Name'},
+          {name: 'FirstName', text: 'First Name'},
+          {name: 'LastName', text: 'Last Name'},
+          {name: 'Email', text: 'Email'}
+        ],
+        list: null,
+        sortByKey: {name: 'UserName', value: 1},
+        page: 1,
+        limit: 10
+      }
+    },
     methods: {
       getAll: function () {
-        UserService.getAll(1, 10)
+        UserService.getAll(this.page, this.limit, this.sortByKey.name, this.sortByKey.value === 0).then(res => {
+          if (res.success) {
+            this.list = res.data
+          }
+        })
+      },
+      sort: function (item) {
+        this.sortByKey = item
+        this.page = 1
+        this.limit = 10
+        this.getAll()
       }
     },
     created: function () {
