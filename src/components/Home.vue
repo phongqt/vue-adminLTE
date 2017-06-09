@@ -36,3 +36,8 @@
     }
   }
 </script>
+<style>
+.bg-search {
+  background-color: #fff!important;
+}
+</style>

@@ -39,7 +39,7 @@ var _put = function (api, data) {
   })
 }
 
-var _delete = function (api, data) {
+var _delete = function (api) {
   return http.delete(api).then(response => {
     return handleSuccess(response)
   }).catch(error => {
@@ -50,8 +50,9 @@ var _delete = function (api, data) {
 function handleSuccess (response) {
   result.code = response.status
   result.success = response.data.success
-  if (result.success) {
-    result.data = response.data.data.data
+  if (result.success && response.data.data) {
+    let data = response.data.data
+    result.data = data.data ? data.data : data
   }
   result.message = response.data.message
   return result

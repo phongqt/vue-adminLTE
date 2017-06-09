@@ -9,6 +9,19 @@ function login (model) {
 }
 
 function addUser (model) {
-  return request.post('/user', model)
+  return request.post('user', model)
 }
-export default { getAll, login, addUser }
+
+function removeUser (id) {
+  return request.delete('user/' + id)
+}
+
+function getUserInfo (id) {
+  return request.get('user/' + id)
+}
+
+function updateUser (id, model) {
+  return request.put('user/' + id, model)
+}
+
+export default { getAll, login, addUser, removeUser, getUserInfo, updateUser }

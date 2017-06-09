@@ -7,6 +7,9 @@ import VeeValidate from 'vee-validate'
 
 Vue.config.productionTip = false
 Vue.use(VeeValidate)
+Vue.filter('capitalize', function (value) {
+  return value.charAt(0).toUpperCase() + value.slice(1)
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -2,14 +2,25 @@
 	<table  class="table table-bordered">
 		<thead>
 			<tr>
+        <th></th>
 				<th v-for="col in columns" @click="sortBy(col.name)">{{col.text}}
-        <span class="arrow" :class="sortOrders[col.name] > 0 ? 'asc' : 'dsc'"></span>
+          <span class="arrow" :class="sortOrders[col.name] > 0 ? 'asc' : 'dsc'"></span>
         </th>
+        <th></th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="item in list">
+			<tr v-for="(item, index) in filteredData">
+        <td>{{ index + 1 }}</td>
 				<td v-for="col in columns">{{item[col.name]}}</td>
+        <td class="text-center">
+          <a class="btn btn-success" @click="editIem(item)">  
+              Edit  
+          </a>
+          <a class="btn btn-danger" @click="removeItem(item)">
+              Delete  
+          </a>
+        </td>
 			</tr>
 		</tbody>
 	</table>
@@ -19,7 +30,8 @@ export default {
   props: {
     list: Array,
     columns: Array,
-    sortKey: Object
+    sortKey: Object,
+    filterKey: String
   },
   data: function () {
     var sortOrders = {}
@@ -29,6 +41,20 @@ export default {
 
     return {
       sortOrders: sortOrders
+    }
+  },
+  computed: {
+    filteredData: function () {
+      var filterKey = this.filterKey && this.filterKey.toLowerCase()
+      var data = this.list
+      if (filterKey) {
+        data = data.filter(function (row) {
+          return Object.keys(row).some(function (key) {
+            return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+          })
+        })
+      }
+      return data
     }
   },
   created: function () {
@@ -42,6 +68,12 @@ export default {
       this.sortKey.name = key
       this.sortKey.value = this.sortOrders[key]
       this.$emit('sort-by', this.sortKey)
+    },
+    editIem: function (item) {
+      this.$emit('edit-item', item)
+    },
+    removeItem: function (item) {
+      this.$emit('remove-item', item)
     }
   }
 }

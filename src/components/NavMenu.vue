@@ -34,8 +34,8 @@
               </span>
           </a>
           <ul class="treeview-menu">
-            <li class="active"><router-link v-bind:to="'/'"><i class="fa fa-list"></i> List</router-link></li>
-            <li><router-link v-bind:to="'/user-add'"><i class="fa fa-plus"></i> Add</router-link></li>
+            <router-link to="/" tag="li" exact><a><i class="fa fa-list"></i> List</a></router-link>
+            <router-link to="/user-add" tag="li" exact><a><i class="fa fa-plus"></i> Add</a></router-link>
           </ul>
         </li>
         <li class="treeview">
@@ -59,3 +59,8 @@
 <script>
     export default {}
 </script>
+<style>
+  li.router-link-active a {
+    color: #fff!important;
+  }
+</style>
